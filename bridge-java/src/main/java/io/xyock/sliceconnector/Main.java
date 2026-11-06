@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 public final class Main {
     private static final String VERSION = "0.1.0";
+    private static final String ALLOWED_ORIGIN = "https://xyock.github.io";
     private static final String XYOCK_URL = "https://xyock.github.io/beta-xyock/";
 
     public static void main(String[] args) throws IOException {
@@ -21,6 +22,7 @@ public final class Main {
     }
 
     private static void health(HttpExchange exchange) throws IOException {
+        if (!isAllowedOrigin(exchange)) { reply(exchange, 403, "{\"error\":\"origin_not_allowed\"}"); return; }
         if (!"GET".equals(exchange.getRequestMethod())) {
             reply(exchange, 405, "{\"error\":\"method_not_allowed\"}");
             return;
@@ -29,6 +31,7 @@ public final class Main {
     }
 
     private static void launch(HttpExchange exchange) throws IOException {
+        if (!isAllowedOrigin(exchange)) { reply(exchange, 403, "{\"error\":\"origin_not_allowed\"}"); return; }
         if (!"POST".equals(exchange.getRequestMethod())) {
             reply(exchange, 405, "{\"error\":\"method_not_allowed\"}");
             return;
@@ -42,11 +45,17 @@ public final class Main {
         }
     }
 
+    private static boolean isAllowedOrigin(HttpExchange exchange) {
+        String origin = exchange.getRequestHeaders().getFirst("Origin");
+        return origin == null || ALLOWED_ORIGIN.equals(origin);
+    }
+
     private static void reply(HttpExchange exchange, int status, String body) throws IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
         exchange.getResponseHeaders().set("Cache-Control", "no-store");
-        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "null");
+        exchange.getResponseHeaders().set("Vary", "Origin");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
         exchange.sendResponseHeaders(status, bytes.length);
         try (var output = exchange.getResponseBody()) {
             output.write(bytes);
