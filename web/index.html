@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Slice Connector starter interface">
+  <title>Slice Connector</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">S</span><span>Slice Connector</span></div>
+      <span id="connection-state" class="state" role="status">연결 확인 중</span>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">XYOCK × ENTRY</p>
+      <h1>Connect your projects.</h1>
+      <p>Entry 프로젝트와 XYOCK를 연결하기 위한 로컬 커넥터입니다.</p>
+      <div class="actions">
+        <button id="connect-button" type="button">연결 확인</button>
+        <button id="launch-button" type="button" class="secondary" disabled>XYOCK 열기</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="status-title">
+      <h2 id="status-title">시스템 상태</h2>
+      <dl>
+        <div><dt>Java Bridge</dt><dd id="bridge-status">확인 전</dd></div>
+        <div><dt>C Engine</dt><dd id="native-status">별도 빌드 모듈</dd></div>
+        <div><dt>Entry 연결</dt><dd id="entry-status">연동 준비 중</dd></div>
+      </dl>
+    </section>
+
+    <p id="message" class="message" role="status">로컬 커넥터가 실행 중인지 확인해 주세요.</p>
+  </main>
+  <script type="module" src="./src/connector.ts"></script>
+</body>
+</html>
