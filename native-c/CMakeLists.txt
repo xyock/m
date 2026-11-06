@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(slice_connector_native C)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+add_library(slice_native STATIC src/calculator.c src/hardware.c)
+target_include_directories(slice_native PUBLIC include)
